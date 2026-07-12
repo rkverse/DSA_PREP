@@ -1,44 +1,48 @@
-class stack:
+class Stack:  # Capital S (PEP8 convention)
     def __init__(self):
-        self.items = []          # Internal list to store elements
-
+        self.items = []
+    
     def push(self, item):
-        """Add item to the top of the stack"""
         self.items.append(item)
-
+    
     def pop(self):
         if self.is_empty():
-            return "Stack is empty"
-        print("Popped", self.items[-1])
+            return None  # Better to return None than string
         return self.items.pop()
     
-
     def peek(self):
         if self.is_empty():
-            return "Stack is empty"
+            return None
         return self.items[-1]
-
+    
     def is_empty(self):
-        """Check if stack is empty"""
-        if len(self.items) == 0:
-            return True
-        return False
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
 
-s = stack()
-sample="{[(}]}"
-for char in sample:
-    if char in "{[(":
-        s.push(char)
-    elif char in "}])":
-        if s.is_empty():
-            print("Unbalanced")
-            break
-        top = s.pop()
-        if (char == "}" and top != "{") or (char == "]" and top != "[") or (char == ")" and top != "("):
-            print("Unbalanced")
-            break
-else:
-    if s.is_empty():
-        print("Balanced")
-    else:
-        print("Unbalanced")
+
+# Solution for Valid Parentheses
+def is_valid(s: str) -> bool:
+    stack = Stack()
+    mapping = {")": "(", "]": "[", "}": "{"}  # Clean matching
+    
+    for char in s:
+        if char in "([{":
+            stack.push(char)
+        elif char in ")]}":
+            if stack.is_empty():
+                return False
+            top = stack.pop()
+            if mapping[char] != top:   # Much cleaner check
+                return False
+    
+    return stack.is_empty()
+
+
+# Test
+print(is_valid("{[()]}"))   # True
+print(is_valid("()[]{}"))   # True
+print(is_valid("(]"))       # False
+print(is_valid("([)]"))     # False
+print(is_valid(""))         # True
